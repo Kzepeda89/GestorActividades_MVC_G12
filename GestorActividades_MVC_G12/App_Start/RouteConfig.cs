@@ -12,7 +12,7 @@ namespace GestorActividades_MVC_G12
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Eventos", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Acceso", action = "Login", id = UrlParameter.Optional }
             );
         }
     }

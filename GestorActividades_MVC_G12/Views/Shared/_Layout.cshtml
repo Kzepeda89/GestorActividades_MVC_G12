@@ -3,33 +3,46 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Gestor G12</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <title>@ViewBag.Title - Gestor UTEC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar-custom {
+            background-color: #2c3e50;
+        }
+
+        .main-container {
+            margin-top: 30px;
+            min-height: 70vh;
+        }
+    </style>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
         <div class="container">
-            <div class="navbar-header">
-                @* Cambiado de Home a Eventos *@
-                @Html.ActionLink("Gestor de Actividades", "Index", "Eventos", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Inicio", "Index", "Eventos")</li>
+            <a class="navbar-brand fw-bold" href="@Url.Action("Index", "Eventos")">Gestor de Actividades</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">@Html.ActionLink("Eventos", "Index", "Eventos", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Inscripciones", "Index", "Inscripciones", null, new { @class = "nav-link" })</li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        @* Aquí el cambio para que funcione el botón *@
+                        @Html.ActionLink("Cerrar Sesión", "Logout", "Acceso", null, new { @class = "nav-link fw-bold text-warning" })
+                    </li>
                 </ul>
             </div>
         </div>
-    </div>
-    <div class="container body-content">
+    </nav>
+
+    <div class="container main-container">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Grupo 12 UTEC</p>
-        </footer>
     </div>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+
+    <footer class="text-center mt-5 py-4 border-top">
+        <p>&copy; @DateTime.Now.Year - Programación 2 - Grupo 12 UTEC</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
