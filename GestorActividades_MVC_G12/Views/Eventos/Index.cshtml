@@ -1,40 +1,85 @@
 ﻿@model IEnumerable<GestorActividades_MVC_G12.Models.Evento>
+@{ ViewBag.Title = "Gestión de Actividades"; }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="text-secondary fw-bold">Administración de Actividades</h2>
-    @Html.ActionLink("Registrar Nueva Actividad", "Create", null, new { @class = "btn btn-outline-primary" })
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
+        <h2 class="fw-bold text-dark">
+            <i class="bi bi-calendar-check-fill me-2 text-primary"></i>Administración de Actividades
+        </h2>
+        <p class="text-secondary mb-0">Gestione los eventos, categorías y cupos disponibles en el sistema.</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        @Html.ActionLink("Registrar Nueva Actividad", "Create", null, new { @class = "btn btn-primary btn-lg rounded-pill shadow-sm px-4 fw-bold" })
+    </div>
 </div>
 
-<div class="card border-0 shadow-sm">
-    <div class="card-header bg-dark text-white">
-        <h5 class="mb-0">Listado Oficial de Eventos</h5>
+<div class="card shadow-sm border-0 overflow-hidden">
+    @* SOCIO: Encabezado centrado y profesional *@
+    <div class="card-header bg-dark text-white py-3 text-center">
+        <h5 class="mb-0 fw-bold small text-uppercase letter-spacing-2">Listado Oficial de Eventos Programados</h5>
     </div>
+
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
-                <tr>
-                    <th>ID</th>
+                <tr class="text-secondary small text-uppercase">
+                    <th class="ps-4" style="width: 80px;">ID</th>
                     <th>Eventos Disponibles</th>
-                    <th>Categoría</th>
-                    <th>Cupos</th>
-                    <th class="text-center">Acciones</th>
+                    <th class="text-center">Categoría</th>
+                    <th class="text-center">Cupos</th>
+                    <th class="text-end pe-4">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="fw-bold">@item.IdEvento</td>
-                        <td>@item.NombreEvento</td>
-                        <td><span class="badge bg-info text-dark">@item.NombreCategoria</span></td>
-                        <td>@item.CuposDisponibles</td>
+                        <td class="ps-4 fw-bold text-muted">#@item.IdEvento</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-3 bg-light p-2 me-3 border">
+                                    @* SOCIO: Icono inteligente según la categoría *@
+                                    @if (item.NombreCategoria == "Deportes")
+                                    {<i class="bi bi-trophy text-primary"></i> }
+                                    else if (item.NombreCategoria == "Tecnología")
+                                    { <i class="bi bi-cpu text-info"></i> }
+                                    else if (item.NombreCategoria == "Académico")
+                                    { <i class="bi bi-book text-success"></i> }
+                                    else
+                                    { <i class="bi bi-palette text-warning"></i>}
+                                </div>
+                                <span class="fw-bold text-dark fs-6">@item.NombreEvento</span>
+                            </div>
+                        </td>
                         <td class="text-center">
-                            @Html.ActionLink("Editar", "Edit", new { id = item.IdEvento }, new { @class = "btn btn-sm btn-warning me-2" })
-                            @Html.ActionLink("Eliminar", "Delete", new { id = item.IdEvento }, new { @class = "btn btn-sm btn-danger", onclick = "return confirm('¿Borrar?')" })
+                            @* SOCIO: Badges con colores sólidos y mejor contraste *@
+                            @{
+                                var badgeClass = "bg-primary";
+                                if (item.NombreCategoria == "Tecnología") { badgeClass = "bg-info text-dark"; }
+                                else if (item.NombreCategoria == "Académico") { badgeClass = "bg-success"; }
+                                else if (item.NombreCategoria == "Cultura") { badgeClass = "bg-warning text-dark"; }
+                            }
+                            <span class="badge @badgeClass px-3 py-2 rounded-pill fw-bold shadow-sm" style="min-width: 100px;">
+                                @item.NombreCategoria
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <div class="fw-bold">@item.CuposDisponibles</div>
+                            <small class="text-muted" style="font-size: 0.7rem;">Plazas</small>
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="btn-group shadow-sm rounded">
+                                @Html.ActionLink("Editar", "Edit", new { id = item.IdEvento }, new { @class = "btn btn-sm btn-outline-dark fw-bold" })
+                                @Html.ActionLink("Eliminar", "Delete", new { id = item.IdEvento }, new { @class = "btn btn-sm btn-danger fw-bold" })
+                            </div>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
+</div>
+
+<div class="mt-4 text-center">
+    <p class="text-muted small italic">Mostrando @Model.Count() actividades extracurriculares registradas para el ciclo actual.</p>
 </div>
