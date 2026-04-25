@@ -1,28 +1,85 @@
 ﻿@model IEnumerable<GestorActividades_MVC_G12.Controllers.VistaInscripcion>
+@{ ViewBag.Title = "Gestión de Inscripciones"; }
 
-<div class="card shadow mb-4">
-    <div class="card-header bg-primary text-white"><h5>Nueva Inscripción</h5></div>
-    <div class="card-body">
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold text-dark"><i class="bi bi-people-fill me-2 text-primary"></i>Registro de Participantes</h2>
+        <p class="text-secondary">Inscriba estudiantes a las actividades y gestione la base de datos actual.</p>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 border-start border-4 border-primary mb-5">
+    <div class="card-header bg-white py-3">
+        <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-plus-circle me-2"></i>Nueva Inscripción</h5>
+    </div>
+    <div class="card-body bg-light bg-opacity-50">
         @using (Html.BeginForm("Inscribir", "Inscripciones", FormMethod.Post, new { @class = "row g-3" }))
         {
-            <div class="col-md-3"><input type="text" name="carnet" class="form-control" placeholder="Carnet" required></div>
-            <div class="col-md-3"><input type="text" name="nombre" class="form-control" placeholder="Nombre Estudiante" required></div>
-            <div class="col-md-4">@Html.DropDownList("idEvento", (IEnumerable<SelectListItem>)ViewBag.Eventos, "-- Seleccione Evento --", new { @class = "form-select", required = "required" })</div>
-            <div class="col-md-2"><button type="submit" class="btn btn-success w-100">Inscribir</button></div>
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-uppercase text-muted">Carnet del Estudiante</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-card-text"></i></span>
+                    <input type="text" name="carnet" class="form-control border-start-0" placeholder="00-0000-202X" required>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-uppercase text-muted">Nombre Completo</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-person"></i></span>
+                    <input type="text" name="nombre" class="form-control border-start-0" placeholder="Juan Pérez" required>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small fw-bold text-uppercase text-muted">Seleccionar Actividad</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-flag"></i></span>
+                    @Html.DropDownList("idEvento", (IEnumerable<SelectListItem>)ViewBag.Eventos, "-- Seleccione Evento --", new { @class = "form-select border-start-0", required = "required" })
+                </div>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+                    <i class="bi bi-send-check me-2"></i>Registrar
+                </button>
+            </div>
         }
     </div>
 </div>
 
-<div class="card shadow">
-    <table class="table table-hover mb-0">
-        <thead class="table-dark">
-            <tr><th>Carnet</th><th>Estudiante</th><th>Actividad</th><th>Fecha</th></tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr><td>@item.Carnet</td><td>@item.Estudiante</td><td>@item.Actividad</td><td>@item.Fecha</td></tr>
-            }
-        </tbody>
-    </table>
+<div class="card shadow-sm border-0">
+    @* SOCIO: Aquí centramos el texto del encabezado oscuro *@
+    <div class="card-header bg-dark text-white py-3 text-center">
+        <h5 class="mb-0 fw-bold small text-uppercase letter-spacing-1">Listado Maestro de Inscripciones</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr class="text-secondary small text-uppercase">
+                    <th class="ps-4">Carnet</th>
+                    <th>Estudiante</th>
+                    <th class="text-center">Actividad / Evento</th>
+                    <th class="text-end pe-4">Fecha Registro</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="ps-4 fw-bold text-primary">@item.Carnet</td>
+                        @* SOCIO: Nombre más vistoso *@
+                        <td class="fw-bold text-dark">@item.Estudiante</td>
+                        <td class="text-center">
+                            @* SOCIO: Mejoramos el contraste del badge (azul sólido con texto blanco) *@
+                            <span class="badge bg-primary px-3 py-2 rounded-pill shadow-sm" style="min-width: 200px;">
+                                <i class="bi bi-tag-fill me-1"></i> @item.Actividad
+                            </span>
+                        </td>
+                        @* SOCIO: Fecha más clara e iconos alineados *@
+                        <td class="text-end pe-4 fw-bold text-secondary">
+                            <i class="bi bi-calendar-check-fill me-1 text-primary"></i> @item.Fecha
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

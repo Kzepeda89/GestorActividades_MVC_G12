@@ -38,7 +38,7 @@ namespace GestorActividades_MVC_G12.Controllers
                 }
                 dr.Close();
 
-                // 2. CARGAR COMBO PARA INSCRIBIR
+                // 2. CARGAR COMBO
                 List<SelectListItem> eventos = new List<SelectListItem>();
                 SqlCommand cmdE = new SqlCommand("SELECT id_evento, nombre_evento FROM Eventos", con);
                 SqlDataReader drE = cmdE.ExecuteReader();
