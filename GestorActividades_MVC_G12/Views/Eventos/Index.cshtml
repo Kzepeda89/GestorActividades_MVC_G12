@@ -1,0 +1,27 @@
+﻿@model IEnumerable<GestorActividades_MVC_G12.Models.Evento>
+
+@{ ViewBag.Title = "Listado"; }
+
+<h2 class="text-primary">Gestión de Actividades Universitarias</h2>
+<p>@Html.ActionLink("Registrar nueva actividad", "Create", null, new { @class = "btn btn-success" })</p>
+
+<table class="table table-striped table-bordered">
+    <tr class="bg-primary" style="color:white">
+        <th>Eventos Disponibles</th>
+        <th>Categoría</th>
+        <th>Cupos Disponibles</th>
+        <th>Acciones</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.NombreEvento)</td>
+            <td>@Html.DisplayFor(modelItem => item.NombreCategoria)</td>
+            <td>@Html.DisplayFor(modelItem => item.CuposDisponibles)</td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.IdEvento }, new { @class = "btn btn-warning btn-xs" }) |
+                @Html.ActionLink("Eliminar", "Delete", new { id = item.IdEvento }, new { @class = "btn btn-danger btn-xs", onclick = "return confirm('¿Seguro de eliminar?');" })
+            </td>
+        </tr>
+    }
+</table>

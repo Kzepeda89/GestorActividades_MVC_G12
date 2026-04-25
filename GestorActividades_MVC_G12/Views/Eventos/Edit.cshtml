@@ -1,0 +1,20 @@
+﻿@model GestorActividades_MVC_G12.Models.Evento
+@{ ViewBag.Title = "Editar"; }
+
+<h2>Modificar Actividad</h2>
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.IdEvento)
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-md-2">Nombre del Evento</label>
+            <div class="col-md-10">@Html.TextBoxFor(m => m.NombreEvento, new { @class = "form-control" })</div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Cupos</label>
+            <div class="col-md-10">@Html.TextBoxFor(m => m.CuposDisponibles, new { @class = "form-control", type = "number" })</div>
+        </div>
+        <input type="submit" value="Actualizar Cambios" class="btn btn-primary" />
+        @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-default" })
+    </div>
+}
