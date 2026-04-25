@@ -14,21 +14,47 @@
             margin-top: 30px;
             min-height: 70vh;
         }
+
+        .nav-link:hover {
+            color: #f1c40f !important;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="@Url.Action("Index", "Eventos")">Gestor de Actividades</a>
-            <div class="collapse navbar-collapse">
+            @* SOCIO: Ahora el logo te manda al Dashboard informativo *@
+            <a class="navbar-brand fw-bold text-info" href="@Url.Action("DashBoard", "Acceso")">
+                <i class="bi bi- joys-stick"></i> Gestor de Actividades
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">@Html.ActionLink("Eventos", "Index", "Eventos", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Inscripciones", "Index", "Inscripciones", null, new { @class = "nav-link" })</li>
+                    @* Enlaces principales *@
+                    <li class="nav-item">
+                        @Html.ActionLink("Inicio", "DashBoard", "Acceso", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Eventos", "Index", "Eventos", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Inscripciones", "Index", "Inscripciones", null, new { @class = "nav-link" })
+                    </li>
                 </ul>
+
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        @* Aquí el cambio para que funcione el botón *@
-                        @Html.ActionLink("Cerrar Sesión", "Logout", "Acceso", null, new { @class = "nav-link fw-bold text-warning" })
+                        @if (Session["Usuario"] != null)
+                        {
+                            <span class="nav-link disabled text-light me-3">Hola, @Session["Usuario"]</span>
+                        }
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Cerrar Sesión", "Logout", "Acceso", null, new { @class = "btn btn-outline-warning btn-sm fw-bold" })
                     </li>
                 </ul>
             </div>
@@ -39,8 +65,9 @@
         @RenderBody()
     </div>
 
-    <footer class="text-center mt-5 py-4 border-top">
-        <p>&copy; @DateTime.Now.Year - Programación 2 - Grupo 12 UTEC</p>
+    <footer class="text-center mt-5 py-4 border-top bg-light">
+        <p class="mb-0 text-muted">&copy; @DateTime.Now.Year - Programación 2 - Grupo 12 UTEC</p>
+        <small class="text-secondary">Ingeniería en Sistemas Informáticos</small>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

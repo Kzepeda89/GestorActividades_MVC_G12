@@ -21,29 +21,49 @@ namespace GestorActividades_MVC_G12.Controllers
             List<VistaInscripcion> lista = new List<VistaInscripcion>();
             using (SqlConnection con = Conexion.Conectar())
             {
-                // Usamos el query EXACTO de tu proyecto anterior que sí funcionaba
+                // 1. CARGAR TABLA
                 string query = @"SELECT i.carnet_estudiante, i.nombre_estudiante, e.nombre_evento, i.fecha_registro 
-                                 FROM Inscripciones i 
-                                 INNER JOIN Eventos e ON i.id_evento = e.id_evento";
-
+                                 FROM Inscripciones i INNER JOIN Eventos e ON i.id_evento = e.id_evento";
                 SqlCommand cmd = new SqlCommand(query, con);
                 SqlDataReader dr = cmd.ExecuteReader();
-
                 while (dr.Read())
                 {
                     lista.Add(new VistaInscripcion
                     {
-                        // Mapeamos con los nombres reales de tu tabla (image_e11659.png)
                         Carnet = dr["carnet_estudiante"].ToString(),
                         Estudiante = dr["nombre_estudiante"].ToString(),
                         Actividad = dr["nombre_evento"].ToString(),
-                        Fecha = dr["fecha_registro"] != DBNull.Value
-                                ? Convert.ToDateTime(dr["fecha_registro"]).ToString("dd/MM/yyyy")
-                                : "N/A"
+                        Fecha = Convert.ToDateTime(dr["fecha_registro"]).ToString("dd/MM/yyyy")
                     });
                 }
+                dr.Close();
+
+                // 2. CARGAR COMBO PARA INSCRIBIR
+                List<SelectListItem> eventos = new List<SelectListItem>();
+                SqlCommand cmdE = new SqlCommand("SELECT id_evento, nombre_evento FROM Eventos", con);
+                SqlDataReader drE = cmdE.ExecuteReader();
+                while (drE.Read())
+                {
+                    eventos.Add(new SelectListItem { Text = drE[1].ToString(), Value = drE[0].ToString() });
+                }
+                ViewBag.Eventos = eventos;
             }
             return View(lista);
+        }
+
+        [HttpPost]
+        public ActionResult Inscribir(string carnet, string nombre, int idEvento)
+        {
+            using (SqlConnection con = Conexion.Conectar())
+            {
+                string sql = "INSERT INTO Inscripciones (carnet_estudiante, nombre_estudiante, id_evento, fecha_registro) VALUES (@c, @n, @e, GETDATE())";
+                SqlCommand cmd = new SqlCommand(sql, con);
+                cmd.Parameters.AddWithValue("@c", carnet);
+                cmd.Parameters.AddWithValue("@n", nombre);
+                cmd.Parameters.AddWithValue("@e", idEvento);
+                cmd.ExecuteNonQuery();
+            }
+            return RedirectToAction("Index");
         }
     }
 }

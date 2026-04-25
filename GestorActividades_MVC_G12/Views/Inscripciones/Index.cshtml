@@ -1,35 +1,28 @@
 ﻿@model IEnumerable<GestorActividades_MVC_G12.Controllers.VistaInscripcion>
-@{ ViewBag.Title = "Registro de Inscripciones"; }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="text-primary">Participantes Inscritos</h2>
-        @Html.ActionLink("Regresar a Eventos", "Index", "Eventos", null, new { @class = "btn btn-outline-primary" })
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white"><h5>Nueva Inscripción</h5></div>
+    <div class="card-body">
+        @using (Html.BeginForm("Inscribir", "Inscripciones", FormMethod.Post, new { @class = "row g-3" }))
+        {
+            <div class="col-md-3"><input type="text" name="carnet" class="form-control" placeholder="Carnet" required></div>
+            <div class="col-md-3"><input type="text" name="nombre" class="form-control" placeholder="Nombre Estudiante" required></div>
+            <div class="col-md-4">@Html.DropDownList("idEvento", (IEnumerable<SelectListItem>)ViewBag.Eventos, "-- Seleccione Evento --", new { @class = "form-select", required = "required" })</div>
+            <div class="col-md-2"><button type="submit" class="btn btn-success w-100">Inscribir</button></div>
+        }
     </div>
+</div>
 
-    <div class="card shadow border-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Carnet</th>
-                        <th>Nombre del Estudiante</th>
-                        <th>Actividad Seleccionada</th>
-                        <th>Fecha de Registro</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td class="fw-bold">@item.Carnet</td>
-                            <td>@item.Estudiante</td>
-                            <td><span class="badge bg-info text-dark">@item.Actividad</span></td>
-                            <td>@item.Fecha</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div class="card shadow">
+    <table class="table table-hover mb-0">
+        <thead class="table-dark">
+            <tr><th>Carnet</th><th>Estudiante</th><th>Actividad</th><th>Fecha</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr><td>@item.Carnet</td><td>@item.Estudiante</td><td>@item.Actividad</td><td>@item.Fecha</td></tr>
+            }
+        </tbody>
+    </table>
 </div>

@@ -1,0 +1,24 @@
+﻿@{ ViewBag.Title = "Inicio"; }
+<div class="p-5 mb-4 bg-light rounded-3 shadow-sm border-start border-primary border-5">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold text-primary">Gestor de Actividades Extracurriculares</h1>
+        <p class="col-md-8 fs-4">¡Qué onda, <strong>@Session["Usuario"]</strong>! Bienvenido al panel de administración del Grupo 12.</p>
+        <hr />
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card bg-success text-white shadow">
+                    <div class="card-body">
+                        <h3>Próximos Eventos: @ViewBag.TotalEventos activos</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-warning text-dark shadow">
+                    <div class="card-body">
+                        <h3>Inscripciones: @ViewBag.TotalInscritos registros</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
