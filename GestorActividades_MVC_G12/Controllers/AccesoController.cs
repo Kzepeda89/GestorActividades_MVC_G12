@@ -15,13 +15,13 @@ namespace GestorActividades_MVC_G12.Controllers
             if (usuario == "admin" && clave == "123")
             {
                 Session["Usuario"] = usuario;
-                return RedirectToAction("DashBoard", "Acceso"); // Te manda al nuevo Dashboard
+                return RedirectToAction("DashBoard", "Acceso"); // Te manda al Dashboard
             }
             ViewBag.Error = "Credenciales incorrectas";
             return View();
         }
 
-        // NUEVO: Pantalla de bienvenida como la del proyecto anterior
+        // Pantalla de bienvenida
         public ActionResult DashBoard()
         {
             if (Session["Usuario"] == null) return RedirectToAction("Login");
