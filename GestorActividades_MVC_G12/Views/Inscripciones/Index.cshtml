@@ -8,7 +8,7 @@
     </div>
 </div>
 
-<div class="card shadow-sm border-0 border-start border-4 border-primary mb-5">
+<div class="card shadow-sm border-0 border-start border-4 border-primary mb-4">
     <div class="card-header bg-white py-3">
         <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-plus-circle me-2"></i>Nueva Inscripción</h5>
     </div>
@@ -45,8 +45,26 @@
     </div>
 </div>
 
+<div class="card shadow-sm mb-4 border-0 bg-white">
+    <div class="card-body py-3">
+        @using (Html.BeginForm("Index", "Inscripciones", FormMethod.Get, new { @class = "row g-2 align-items-center" }))
+        {
+            <div class="col-md-9">
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-funnel-fill text-secondary"></i></span>
+                    <input type="text" name="buscar" value="@ViewBag.Busqueda" class="form-control" placeholder="Filtrar reporte por Carnet o Nombre de Estudiante (Procesado con LINQ)...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-outline-dark w-100 fw-bold">
+                    <i class="bi bi-search me-1"></i> Filtrar Tabla
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
 <div class="card shadow-sm border-0">
-    @* SOCIO: Aquí centramos el texto del encabezado oscuro *@
     <div class="card-header bg-dark text-white py-3 text-center">
         <h5 class="mb-0 fw-bold small text-uppercase letter-spacing-1">Listado Maestro de Inscripciones</h5>
     </div>
@@ -65,15 +83,12 @@
                 {
                     <tr>
                         <td class="ps-4 fw-bold text-primary">@item.Carnet</td>
-                        @* SOCIO: Nombre más vistoso *@
                         <td class="fw-bold text-dark">@item.Estudiante</td>
                         <td class="text-center">
-                            @* SOCIO: Mejoramos el contraste del badge (azul sólido con texto blanco) *@
                             <span class="badge bg-primary px-3 py-2 rounded-pill shadow-sm" style="min-width: 200px;">
                                 <i class="bi bi-tag-fill me-1"></i> @item.Actividad
                             </span>
                         </td>
-                        @* SOCIO: Fecha más clara e iconos alineados *@
                         <td class="text-end pe-4 fw-bold text-secondary">
                             <i class="bi bi-calendar-check-fill me-1 text-primary"></i> @item.Fecha
                         </td>
