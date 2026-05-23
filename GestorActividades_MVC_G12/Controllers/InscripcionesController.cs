@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq; // OJO: Esto permite usar LINQ
 using System.Web.Mvc;
 using GestorActividades_MVC_G12.Models;
 
@@ -16,12 +17,15 @@ namespace GestorActividades_MVC_G12.Controllers
 
     public class InscripcionesController : Controller
     {
-        public ActionResult Index()
+        // GET: Inscripciones con Filtro LINQ para Reportes
+        public ActionResult Index(string buscar)
         {
+            if (Session["Usuario"] == null) return RedirectToAction("Login", "Acceso");
+
             List<VistaInscripcion> lista = new List<VistaInscripcion>();
             using (SqlConnection con = Conexion.Conectar())
             {
-                // 1. CARGAR TABLA
+                // 1. CARGAR MAESTRO DE DATOS (ADO.NET)
                 string query = @"SELECT i.carnet_estudiante, i.nombre_estudiante, e.nombre_evento, i.fecha_registro 
                                  FROM Inscripciones i INNER JOIN Eventos e ON i.id_evento = e.id_evento";
                 SqlCommand cmd = new SqlCommand(query, con);
@@ -38,7 +42,7 @@ namespace GestorActividades_MVC_G12.Controllers
                 }
                 dr.Close();
 
-                // 2. CARGAR COMBO
+                // 2. CARGAR COMBO PARA EL FORMULARIO
                 List<SelectListItem> eventos = new List<SelectListItem>();
                 SqlCommand cmdE = new SqlCommand("SELECT id_evento, nombre_evento FROM Eventos", con);
                 SqlDataReader drE = cmdE.ExecuteReader();
@@ -48,7 +52,19 @@ namespace GestorActividades_MVC_G12.Controllers
                 }
                 ViewBag.Eventos = eventos;
             }
-            return View(lista);
+
+            // SOCIO: Aquí aplicamos LINQ REQUERIDO PARA LA ENTREGA FINAL
+            if (!string.IsNullOrEmpty(buscar))
+            {
+                var resultadoFiltrado = (from i in lista
+                                         where i.Carnet.Contains(buscar) || i.Estudiante.ToLower().Contains(buscar.ToLower())
+                                         select i).ToList();
+
+                ViewBag.Busqueda = buscar;
+                return View(resultadoFiltrado); // Devuelve solo lo filtrado por LINQ
+            }
+
+            return View(lista); // Devuelve todo si no hay búsqueda
         }
 
         [HttpPost]
