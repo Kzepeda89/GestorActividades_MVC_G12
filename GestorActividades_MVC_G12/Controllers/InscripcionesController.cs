@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq; // OJO: Esto permite usar LINQ
+using System.Linq; // Permite el uso de las consultas declarativas de LINQ
 using System.Web.Mvc;
 using GestorActividades_MVC_G12.Models;
 
@@ -17,17 +17,20 @@ namespace GestorActividades_MVC_G12.Controllers
 
     public class InscripcionesController : Controller
     {
-        // GET: Inscripciones con Filtro LINQ para Reportes
+        // GET: Inscripciones
         public ActionResult Index(string buscar)
         {
+            // Seguridad: Si no hay sesión iniciada, redirige al Login
             if (Session["Usuario"] == null) return RedirectToAction("Login", "Acceso");
 
             List<VistaInscripcion> lista = new List<VistaInscripcion>();
             using (SqlConnection con = Conexion.Conectar())
             {
-                // 1. CARGAR MAESTRO DE DATOS (ADO.NET)
+                // 1. LECTURA BASE CON TU QUERY DE CONFIANZA (ADO.NET)
                 string query = @"SELECT i.carnet_estudiante, i.nombre_estudiante, e.nombre_evento, i.fecha_registro 
-                                 FROM Inscripciones i INNER JOIN Eventos e ON i.id_evento = e.id_evento";
+                                 FROM Inscripciones i 
+                                 INNER JOIN Eventos e ON i.id_evento = e.id_evento";
+
                 SqlCommand cmd = new SqlCommand(query, con);
                 SqlDataReader dr = cmd.ExecuteReader();
                 while (dr.Read())
@@ -42,31 +45,40 @@ namespace GestorActividades_MVC_G12.Controllers
                 }
                 dr.Close();
 
-                // 2. CARGAR COMBO PARA EL FORMULARIO
+                // 2. CARGA DEL COMBO PARA EL FORMULARIO DE NUEVA INSCRIPCIÓN
                 List<SelectListItem> eventos = new List<SelectListItem>();
                 SqlCommand cmdE = new SqlCommand("SELECT id_evento, nombre_evento FROM Eventos", con);
                 SqlDataReader drE = cmdE.ExecuteReader();
                 while (drE.Read())
                 {
-                    eventos.Add(new SelectListItem { Text = drE[1].ToString(), Value = drE[0].ToString() });
+                    eventos.Add(new SelectListItem
+                    {
+                        Text = drE["nombre_evento"].ToString(),
+                        Value = drE["id_evento"].ToString()
+                    });
                 }
                 ViewBag.Eventos = eventos;
             }
 
-            // SOCIO: Aquí aplicamos LINQ REQUERIDO PARA LA ENTREGA FINAL
+            // =========================================================================
+            // FILTRADO DE REPORTES CON SINTAXIS LINQ TO OBJECTS
+            // =========================================================================
             if (!string.IsNullOrEmpty(buscar))
             {
+                // Consulta declarativa LINQ pura sobre la lista cargada en memoria
                 var resultadoFiltrado = (from i in lista
-                                         where i.Carnet.Contains(buscar) || i.Estudiante.ToLower().Contains(buscar.ToLower())
+                                         where i.Carnet.Contains(buscar) ||
+                                               i.Estudiante.ToLower().Contains(buscar.ToLower())
                                          select i).ToList();
 
-                ViewBag.Busqueda = buscar;
-                return View(resultadoFiltrado); // Devuelve solo lo filtrado por LINQ
+                ViewBag.Busqueda = buscar; // Retorna el término buscado a la barra
+                return View(resultadoFiltrado); // Retorna a la vista el set procesado por LINQ
             }
 
-            return View(lista); // Devuelve todo si no hay búsqueda
+            return View(lista); // Si no hay filtro, retorna la colección base completa
         }
 
+        // POST: Registrar Inscripción
         [HttpPost]
         public ActionResult Inscribir(string carnet, string nombre, int idEvento)
         {
